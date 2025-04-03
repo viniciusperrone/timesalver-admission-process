@@ -12,7 +12,6 @@ services:
       - .:/app
     depends_on:
       - db
-      - elasticsearch
 
   db:
     image: postgres
