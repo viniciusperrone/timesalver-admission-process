@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: blog-api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - elasticsearch
+
+  db:
+    image: postgres
+    container_name: blog-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "mypassword"
+      POSTGRES_USER: "myuser"
+      POSTGRES_DB: "core"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+    container_name: blog-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.http.ssl.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=elastic
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+volumes:
+  elasticsearch_data:
+    driver: local
+  pgdata:
