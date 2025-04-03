@@ -7,17 +7,6 @@ from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 
 from config.db import db
-from config.elasticsearch_client import create_articles_index
-
-import users
-import articles
-import reviews
-
-from users.routes import users_blueprint
-from articles.routes import articles_blueprint
-from reviews.routes import reviews_blueprint
-from authentication.routes import authentication_blueprint
-
 
 load_dotenv()
 
@@ -38,14 +27,7 @@ def initialize_app():
 
     migrate = Migrate(app, db)
 
-    create_articles_index()
-
     swagger = Swagger(app)
-
-    app.register_blueprint(users_blueprint)
-    app.register_blueprint(articles_blueprint)
-    app.register_blueprint(reviews_blueprint)
-    app.register_blueprint(authentication_blueprint)
 
     return app
 
